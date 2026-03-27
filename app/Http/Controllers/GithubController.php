@@ -27,18 +27,18 @@ class GithubController extends Controller
          
                 Auth::login($findUser);
         
-                return redirect()->intended('home');
+                return redirect()->route('dashboard');
          
             }else{
                 $newUser = User::updateOrCreate(['email' => $user->email],[
-                        'name' => $user->name,
+                        'name' => $user->name ?? 'Unknown',
                         'github_id'=> $user->id,
                         'password' => encrypt('123456dummy')
                     ]);
         
                 Auth::login($newUser);
         
-                return redirect()->intended('home');
+                return redirect()->route('dashboard');
             }
         
         } catch (Exception $e) {
