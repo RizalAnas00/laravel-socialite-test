@@ -5,7 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">
+                    <a href="{{ route('dashboard') }}" class="text-decoration-none text-dark">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('checkout.index') }}" class="text-dark float-end">
+                        Check-out
+                    </a>
+                </div>
 
                 <div class="card-body">
                     <p>Welcome, {{ $user->name }}!</p>
