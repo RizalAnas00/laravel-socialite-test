@@ -17,7 +17,7 @@ class ShirtFactory extends Factory
      */
     public function definition(): array
     {
-        $stripe = new \Stripe\StripeClient('sk_test_51TFm30DDbaI7WObYoHctCdnaZMbgt7aB2X5WJ5PjdxJbxlvNXYiU546uXnK5nh0YHrAedL2ImxmW6JLgfR7N7UWM007lTEbIvT');
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
         $name = $this->faker->word();
         $stock = $this->faker->numberBetween(1, 12);
