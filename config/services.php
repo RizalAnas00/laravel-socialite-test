@@ -13,7 +13,7 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
+    'redirect' => env('APP_URL') . '/auth/google/callback',
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

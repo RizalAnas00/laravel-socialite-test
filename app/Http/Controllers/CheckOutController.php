@@ -6,13 +6,27 @@ use App\Models\Shirt;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\StripeClient;
 
 class CheckOutController extends Controller
 {
     public function index()
     {
+        /**
+         * @var User
+         */
+        $user  = Auth::user();
+
         $shirts = Shirt::all();
-        return view('checkout', compact('shirts'));
+
+        $stripe = new StripeClient(env('STRIPE_SECRET'));
+
+        $paymentIntentHistory = $stripe->paymentIntents->search([
+            'query' => 'metadata["buyer_id"]:"' . $user->id . '"'
+        ]);        
+
+        // dd($paymentIntentHistory);
+        return view('checkout', compact('shirts', 'paymentIntentHistory'));
     }
 
     public function store(Request $request)
@@ -56,7 +70,10 @@ class CheckOutController extends Controller
                 $paymentMethod ,
                 [
                     'payment_method_types' => ['card'],
-                ]
+                    'metadata' => [
+                        'buyer_id' => $user->id,
+                    ],
+                ],
             );
 
             foreach ($items as $item) {
