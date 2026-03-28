@@ -5,7 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">
+                    <a href="{{ route('dashboard') }}" class="text-decoration-none text-dark">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('checkout.index') }}" class="text-dark float-end">
+                        Check-out
+                    </a>
+                </div>
 
                 <div class="card-body">
                     <p>Welcome, {{ $user->name }}!</p>
@@ -28,6 +35,49 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                {{-- <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Invoices</span>
+                </div>
+
+                <div class="card-body p-0">
+                    @if($invoices->isEmpty())
+                        <p class="p-3 text-muted mb-0">No invoices available.</p>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th width="120">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($invoices as $invoice)
+                                        <tr>
+                                            <td>
+                                                {{ $invoice->date()->format('d M Y') }}
+                                            </td>
+                                            <td class="fw-semibold text-success">
+                                                {{ $invoice->total() }}
+                                            </td>
+                                            <td>
+                                                {{ $invoice->status }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('invoices.download', $invoice->id) }}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                    Download
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div> --}}
                 <div class="card-header">Posts</div>
                     <div class="card-body" id="post-container">                   
                         <form action="{{ route('posts.store') }}" method="POST">
