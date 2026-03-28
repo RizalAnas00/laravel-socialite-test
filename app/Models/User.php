@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'github_id',
+        'facebook_id',
+        'google_id',
     ];
 
     /**
@@ -45,5 +49,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function check_provider(): string
+    {
+        $user = Auth::user();
+
+        $login_provider = $user->github_id ? 'github' : ($user->facebook_id ? 'facebook' : 'google');
+
+        return $login_provider;
+    }
+
+    public function hasPosts()
+    {
+        return $this->posts()->exists();
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }
