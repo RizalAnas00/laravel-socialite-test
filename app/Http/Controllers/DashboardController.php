@@ -17,6 +17,8 @@ class DashboardController extends Controller
         $user = Auth::user();
         $posts = Post::with('user')->latest()->get();
 
-        return view('dashboard', compact('user', 'posts'));
+        $invoices = $user->invoicesIncludingPending();
+
+        return view('dashboard', compact('user', 'posts', 'invoices'));
     }
 }

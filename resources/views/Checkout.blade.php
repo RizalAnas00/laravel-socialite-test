@@ -8,6 +8,16 @@
         </div>
 
         <div class="card-body">
+            <form action="{{ route('shirts.create-dummy') }}" method="POST">
+                @csrf
+                <input type="number" name="count" class="form-control w-25 d-inline-block" value="1" min="1" max="5">
+                <button type="submit" class="btn btn-sm btn-outline-secondary m-3">
+                    Create Dummy Shirts
+                </button>
+            </form>
+        </div>  
+
+        <div class="card-body">
             <form id="payment-form" action="{{ route('checkout.store') }}" method="POST">
                 @csrf
 

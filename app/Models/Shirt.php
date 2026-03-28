@@ -13,6 +13,7 @@ class Shirt extends Model
     protected $fillable = [
         'name',
         'size',
+        'code',
         'stock',
         'price',
         'description'

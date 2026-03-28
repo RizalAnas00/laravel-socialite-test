@@ -6,6 +6,7 @@ use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\GithubController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ShirtController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/checkout', [CheckOutController::class, 'store'])->name('checkout.store');
 
-
+    // shirt
+    Route::post('/shirts/create-dummy', [ShirtController::class, 'createDummy'])->name('shirts.create-dummy');
 });
 
 Route::middleware('guest')->group(function () {

@@ -12,6 +12,6 @@ class ShirtSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Shirt::factory()->count(12)->create();
+        \App\Models\Shirt::factory()->count(4)->create();
     }
 }

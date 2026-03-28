@@ -62,7 +62,11 @@ class CheckOutController extends Controller
             foreach ($items as $item) {
                 $shirt = Shirt::findOrFail($item['shirt_id']);
                 $shirt->decrement('stock', $item['qty']);
+
+                // $user->tabPrice($shirt->code, $item['qty']);
             }
+
+            // $user->invoice();
 
             // dd($charge);
 
