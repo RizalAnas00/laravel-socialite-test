@@ -59,4 +59,14 @@ class User extends Authenticatable
 
         return $login_provider;
     }
+
+    public function hasPosts()
+    {
+        return $this->posts()->exists();
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

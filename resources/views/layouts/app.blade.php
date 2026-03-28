@@ -5,21 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-    <script>
 
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('323935769b3580431059', {
-        cluster: 'ap1'
-        });
-
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function(data) {
-        alert(JSON.stringify(data));
-        });
-    </script>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -29,12 +15,13 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    @vite(['resources/js/app.js'])
     <!-- Custom Styles -->
     @stack('styles')
 </head>
 <body>
     <div id="app">
- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -68,6 +55,29 @@
                             {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
                             </li> --}}
+                            @auth
+                                <li class="nav-item dropdown me-3">
+                                    <a class="nav-link position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown">
+                                        
+                                        <!-- Bell Icon -->
+                                        <svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.104-14.804A1 1 0 0 0 7 2c0 .628-.134 1.197-.356 1.715C5.4 4.68 4 6.223 4 8v3l-1 1v1h10v-1l-1-1V8c0-1.777-1.4-3.32-2.644-4.285A4.992 4.992 0 0 1 9 2a1 1 0 0 0-.896-.804z"/>
+                                        </svg>
+
+                                        <!-- Badge -->
+                                        <span id="notif-count"
+                                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                            style="display:none;">
+                                            0
+                                        </span>
+                                    </a>
+
+                                    <!-- Dropdown -->
+                                    <ul class="dropdown-menu dropdown-menu-end" id="notif-list">
+                                        <li class="dropdown-item text-muted">No notifications</li>
+                                    </ul>
+                                </li>
+                            @endauth
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -96,10 +106,72 @@
             @yield('content')
         </main>
     </div>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!window.Echo) return;
+        
+            let count = 0;
+        
+            const badge = document.getElementById('notif-count');
+            const list = document.getElementById('notif-list');
+        
+            window.Echo.channel('post')
+                .listen('.create', (e) => {
+        
+                    // skip if user id == post creator
+                    if (e.post.user_id === {{ auth()->id() }}) return;
+        
+                    count++;
+        
+                    badge.style.display = 'inline-block';
+                    badge.innerText = count;
+        
+                    if (list.children.length === 1 && list.children[0].innerText === 'No notifications') {
+                        list.innerHTML = '';
+                    }
+        
+                    const item = document.createElement('li');
+                    item.innerHTML = `
+                        <a href="#" class="dropdown-item">
+                            <strong>${e.post.title}</strong><br>
+                            <small class="text-muted">New post created</small>
+                        </a>
+                    `;
+        
+                    list.prepend(item);
+                })
+                .listen('.delete', (e) => {
+                    // skip if user id == post creator
+                    if (e.post.user_id === {{ auth()->id() }}) return;
+        
+                    count++;
+        
+                    badge.style.display = 'inline-block';
+                    badge.innerText = count;
+        
+                    if (list.children.length === 1 && list.children[0].innerText === 'No notifications') {
+                        list.innerHTML = '';
+                    }
+        
+                    const item = document.createElement('li');
+                    item.innerHTML = `
+                        <a href="#" class="dropdown-item">
+                            <strong>${e.post.title}</strong><br>
+                            <small class="text-muted">A post was deleted</small>
+                        </a>
+                    `;
+        
+                    list.prepend(item);
+                });
+        
+            document.getElementById('notifDropdown').addEventListener('click', () => {
+                count = 0;
+                badge.style.display = 'none';
+            });
+        });
+    </script>
+    @stack('scripts')
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    @stack('scripts')
 </body>
 </html>
